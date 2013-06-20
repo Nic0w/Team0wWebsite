@@ -3,28 +3,26 @@
  */
 package fr.team0w.website.pages;
 
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
-import org.apache.tapestry5.ioc.annotations.Inject;
 
-import fr.team0w.website.UserSession;
+import fr.team0w.website.entities.UserSession;
+import fr.team0w.website.security.AccessLevel;
+import fr.team0w.website.security.Clearance;
+
 
 /**
  * @author nic0w
  *
  */
+
+@AccessLevel(Clearance.USER)
 public class Index {
-
+	
 	 @SessionState
-	 @Property
-	 private UserSession userSession;
+	 private UserSession session;
+	 
+	 public String getUserName() {
+		 return session.getUser().getUserName(); 
+	 }
 	
-	 private boolean userSessionExists;
-
-	Object onActivate() {
-		return userSessionExists ? null : Auth.class;
-	}
-	
-
 }

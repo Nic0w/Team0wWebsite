@@ -8,19 +8,20 @@ import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 
-import fr.team0w.website.UserSession;
+import fr.team0w.website.entities.User;
+import fr.team0w.website.entities.UserSession;
+import fr.team0w.website.security.AccessLevel;
+import fr.team0w.website.security.Clearance;
 
 /**
  * @author nic0w
  *
  */
+@AccessLevel(Clearance.ANONYMOUS)
 public class Auth {
-
-	 @SessionState
-	 private UserSession userSession;
-	
-	 private boolean userSessionExists;
 	 
 	 @Property
 	 private String userName;
@@ -28,14 +29,15 @@ public class Auth {
 	 @Component
 	 private Form loginForm;
 	 
-	 Object onActivate() {
-		return userSessionExists ? Index.class : null;
-	}
-	 
+	 @SessionState
+	 private UserSession session;
+
 	 
 	Object onSuccessFromLoginForm() {
 		
-		this.userSession = new UserSession(System.currentTimeMillis(), userName.trim());
+		session.setUser(new User(userName, Clearance.USER));
+		
+		System.out.println("Here we are ! Session created at " + session.getCreationTime());
 		
 		return Index.class;
 	}
